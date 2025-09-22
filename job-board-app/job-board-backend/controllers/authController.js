@@ -4,7 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const signupUser = async (req, res) => {
   try {
-    const { name, email, password, roles } = req.body;
+    const { name, email, password, role } = req.body;
 
     const existingUser = await User.findOne({ email });
     if (existingUser) {
@@ -17,7 +17,7 @@ const signupUser = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      roles,
+      role,
     });
     await user.save();
 
@@ -29,13 +29,13 @@ const signupUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, password, roles } = req.body;
+    const { email, password, role } = req.body;
     const user = await User.findOne({ email });
     if (!user) {
       res.status(404).json({ message: "Email does not exists" });
       return;
     }
-    if (user.roles != roles) {
+    if (user.role != role) {
       res.status(404).json({ message: "Invalid access" });
     }
     const isMatch = await bcrypt.compare(password, user.password);

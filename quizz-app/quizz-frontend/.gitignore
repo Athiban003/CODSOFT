@@ -24,4 +24,4 @@ dist-ssr
 *.sw?
 
 .env
-./src/component/scrollQuizProblem.jsx
+src/component/scrollQuizProblem.jsx

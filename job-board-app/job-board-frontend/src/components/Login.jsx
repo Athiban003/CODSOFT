@@ -15,11 +15,11 @@ function Login({ role }) {
   const [generalErr, setGeneralErr] = useState("");
 
   function navigateSignup() {
-    if (role) {
+    if (role === "employer") {
       navigate("/employer/signup");
-      return;
+    } else {
+      navigate("/signup");
     }
-    navigate("/signup");
   }
 
   async function handleSubmit() {
@@ -40,14 +40,13 @@ function Login({ role }) {
       isErr = true;
     }
     if (isErr) return;
-    const roles = role ? role : "candidate";
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/login`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ email, password, roles }),
+        body: JSON.stringify({ email, password, role }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -65,7 +64,7 @@ function Login({ role }) {
       setGeneralErr(data.message);
       localStorage.setItem("token", data.token);
 
-      if (!role) {
+      if (role === "candidate") {
         setLocalJobs([]);
 
         navigate("/dashboard");

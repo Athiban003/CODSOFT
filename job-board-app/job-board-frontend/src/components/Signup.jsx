@@ -13,11 +13,11 @@ function Signup({ role }) {
 
   const navigate = useNavigate();
   function navigateLogin() {
-    if (role) {
+    if (role === "employer") {
       navigate("/employer/login");
-      return;
+    } else {
+      navigate("/login");
     }
-    navigate("/login");
   }
 
   async function handleSubmit() {
@@ -44,14 +44,13 @@ function Signup({ role }) {
       isErr = true;
     }
     if (isErr) return;
-    const roles = role ? role : "candidate";
     try {
       const res = await fetch(`${import.meta.env.VITE_BACKEND_URL}/signup`, {
         method: "POST",
         headers: {
           "content-type": "application/json",
         },
-        body: JSON.stringify({ name, email, password, roles }),
+        body: JSON.stringify({ name, email, password, role }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -64,11 +63,11 @@ function Signup({ role }) {
       }
       setGeneralErr(data.message);
       setTimeout(() => {
-        if (roles) {
+        if (role === "employer") {
           navigate("/employer/login");
-          return;
+        } else {
+          navigate("/login");
         }
-        navigate("/login");
       }, 1000);
     } catch (error) {
       console.error(error);
